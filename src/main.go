@@ -47,7 +47,7 @@ func (control *ControlMethod) cpsEfficency(intersection Intersection) float32 {
 func printHelp() {
 	fmt.Println("Comet Backup Test Program:")
 	fmt.Println("calculates the best control method for an intersection")
-	fmt.Println("the available control methods can be edited by editing the \"intersections.json\" file")
+	fmt.Println("the available control methods can be edited by editing the \"control_methods.json\" file")
 	fmt.Println("\tflags:")
 	fmt.Println("\t\t-help\t prints help")
 	for _, direction := range []string{"north", "east", "south", "west"} {
@@ -68,16 +68,17 @@ func main() {
 		return
 	}
 
-	file, err := ioutil.ReadFile("intersections.json")
+	fileName := "control_methods.json"
+	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		fmt.Println("Failed to open \"intersections.json\"")
+		fmt.Printf("Failed to open \"%s\"\n", fileName)
 		panic(err)
 	}
 
 	var controlMethods []ControlMethod
 	err = json.Unmarshal([]byte(file), &controlMethods)
 	if err != nil {
-		fmt.Println("Failed to parse json from \"intersections.json\"")
+		fmt.Printf("Failed to parse json from \"%s\"\n", fileName)
 		panic(err)
 	}
 
