@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 )
 
 type Intersection struct {
@@ -25,42 +27,21 @@ func (intersection *Intersection) cpsTotal() float32 {
 }
 
 type ControlMethod struct {
-	name           string
-	efficiencyHigh float32
-	efficiencyMed  float32
-	efficiencyLow  float32
+	Name           string  `json:"name"`
+	EfficiencyHigh float32 `json:"efficiency_high"`
+	EfficiencyMed  float32 `json:"efficiency_med"`
+	EfficiencyLow  float32 `json:"efficiency_low"`
 }
 
 func (control *ControlMethod) cpsEfficency(intersection Intersection) float32 {
 	cpsTotal := intersection.cpsTotal()
 	if cpsTotal < 10 {
-		return control.efficiencyLow
+		return control.EfficiencyLow
 	} else if cpsTotal < 20 {
-		return control.efficiencyMed
+		return control.EfficiencyMed
 	} else {
-		return control.efficiencyHigh
+		return control.EfficiencyHigh
 	}
-}
-
-var controlMethods []ControlMethod = []ControlMethod{
-	{
-		name:           "Roundabout",
-		efficiencyHigh: 0.50,
-		efficiencyMed:  0.75,
-		efficiencyLow:  0.09,
-	},
-	{
-		name:           "Stop Signs",
-		efficiencyHigh: 0.20,
-		efficiencyMed:  0.30,
-		efficiencyLow:  0.40,
-	},
-	{
-		name:           "Traffic Lights",
-		efficiencyHigh: 0.90,
-		efficiencyMed:  0.75,
-		efficiencyLow:  0.30,
-	},
 }
 
 func main() {
@@ -69,6 +50,19 @@ func main() {
 	southInPtr := flag.Float64("south", 0, "south road flow in CPM")
 	westInPtr := flag.Float64("west", 0, "west road flow in CPM")
 	flag.Parse()
+
+	file, err := ioutil.ReadFile("intersections.json")
+	if err != nil {
+		fmt.Println("Failed to open \"intersections.json\"")
+		panic(err)
+	}
+
+	var controlMethods []ControlMethod
+	err = json.Unmarshal([]byte(file), &controlMethods)
+	if err != nil {
+		fmt.Println("Failed to parse json from \"intersections.json\"")
+		panic(err)
+	}
 
 	intersection := Intersection{
 		north: float32(*northInPtr),
@@ -89,7 +83,7 @@ func main() {
 	}
 
 	fmt.Printf("Intersection CPM Total: %.2f\n", intersection.cpsTotal())
-	fmt.Printf("Intersection Best Method: %s\n", bestMethod.name)
+	fmt.Printf("Intersection Best Method: %s\n", bestMethod.Name)
 	fmt.Printf("Intersection Best Method Efficency: %.2f%%\n", bestEfficency)
 	fmt.Printf("Intersection Best Method CPM: %.2f\n", intersection.cpsTotal()*bestEfficency)
 }
