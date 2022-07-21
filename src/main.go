@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+)
 
 type Intersection struct {
 	north float32
@@ -61,11 +64,17 @@ var controlMethods []ControlMethod = []ControlMethod{
 }
 
 func main() {
+	northInPtr := flag.Float64("north", 0, "north road flow in CPM")
+	eastInPtr := flag.Float64("east", 0, "east road flow in CPM")
+	southInPtr := flag.Float64("south", 0, "south road flow in CPM")
+	westInPtr := flag.Float64("west", 0, "west road flow in CPM")
+	flag.Parse()
+
 	intersection := Intersection{
-		north: 5,
-		east:  5,
-		south: 5,
-		west:  5,
+		north: float32(*northInPtr),
+		east:  float32(*eastInPtr),
+		south: float32(*southInPtr),
+		west:  float32(*westInPtr),
 	}
 
 	var bestMethod *ControlMethod
