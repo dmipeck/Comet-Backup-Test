@@ -12,3 +12,5 @@ A build script has been supplied to create the executable
 1. run `chmod u+x ./build.sh` to make the build script executable
 2. run `./build.sh` to build the executable
 3. run `./build/main.exe` to run the program, run `./build/main.exe -help` for available options
+
+Completes extensions 1, 2, and 4
