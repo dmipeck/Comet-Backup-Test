@@ -44,12 +44,29 @@ func (control *ControlMethod) cpsEfficency(intersection Intersection) float32 {
 	}
 }
 
+func printHelp() {
+	fmt.Println("Comet Backup Test Program:")
+	fmt.Println("calculates the best control method for an intersection")
+	fmt.Println("the available control methods can be edited by editing the \"intersections.json\" file")
+	fmt.Println("\tflags:")
+	fmt.Println("\t\t-help\t prints help")
+	for _, direction := range []string{"north", "east", "south", "west"} {
+		fmt.Printf("\t\t-%s=<number>\t sets the %s CPM to the given value\n", direction, direction)
+	}
+}
+
 func main() {
+	printHelpInPtr := flag.Bool("help", false, "Print help")
 	northInPtr := flag.Float64("north", 0, "north road flow in CPM")
 	eastInPtr := flag.Float64("east", 0, "east road flow in CPM")
 	southInPtr := flag.Float64("south", 0, "south road flow in CPM")
 	westInPtr := flag.Float64("west", 0, "west road flow in CPM")
 	flag.Parse()
+
+	if *printHelpInPtr {
+		printHelp()
+		return
+	}
 
 	file, err := ioutil.ReadFile("intersections.json")
 	if err != nil {
