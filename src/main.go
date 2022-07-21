@@ -81,5 +81,6 @@ func main() {
 
 	fmt.Printf("Intersection CPM Total: %.2f\n", intersection.cpsTotal())
 	fmt.Printf("Intersection Best Method: %s\n", bestMethod.name)
-	fmt.Printf("Intersection Best Method Efficency: %.2f%%\n", bestMethod.cpsEfficency(intersection))
+	fmt.Printf("Intersection Best Method Efficency: %.2f%%\n", bestEfficency)
+	fmt.Printf("Intersection Best Method CPM: %.2f\n", intersection.cpsTotal()*bestEfficency)
 }
